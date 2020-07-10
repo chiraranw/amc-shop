@@ -11,8 +11,18 @@ export class ProductListComponent implements OnInit {
   public imageWidth: number = 50;
   public imageMargin: number = 2;
   public showImage: boolean = false;
-  public productFilter: string = 'cart';
+  private _productFilter: string;
+  public get productFilter(): string {
+    return this._productFilter;
+  }
+  public set productFilter(value: string) {
+    this._productFilter = value;
+    this.filteredProducts = this.products
+      ? this.performFilter(this.productFilter)
+      : this.products;
+  }
 
+  public filteredProducts: IProdcut[];
   public products: IProdcut[] = [
     {
       productId: 1,
@@ -35,11 +45,22 @@ export class ProductListComponent implements OnInit {
       imageUrl: 'assets/images/garden_cart.png',
     },
   ];
-  constructor() {}
+  constructor() {
+    this.productFilter = 'cart';
+    this.filteredProducts = this.products;
+  }
 
   ngOnInit(): void {}
 
   public toggleImage(): void {
     this.showImage = !this.showImage;
+  }
+
+  private performFilter(filterBy: string): IProdcut[] {
+    filterBy = filterBy.toLowerCase();
+    return this.products.filter(
+      (product: IProdcut) =>
+        product.productName.toLowerCase().indexOf(filterBy) !== -1
+    );
   }
 }
