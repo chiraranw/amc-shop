@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IProdcut } from '../dtos/product';
 
 @Component({
   selector: 'amc-product-list',
@@ -12,7 +13,7 @@ export class ProductListComponent implements OnInit {
   public showImage: boolean = false;
   public productFilter: string = 'cart';
 
-  public products: any[] = [
+  public products: IProdcut[] = [
     {
       productId: 1,
       productName: 'Leaf Rake',
