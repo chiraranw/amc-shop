@@ -7,7 +7,7 @@ import { IProdcut } from '../dtos/product';
   styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent implements OnInit {
-  public title: string = 'Product List';
+  public title: string;
   public imageWidth: number = 50;
   public imageMargin: number = 2;
   public showImage: boolean = false;
@@ -62,5 +62,9 @@ export class ProductListComponent implements OnInit {
       (product: IProdcut) =>
         product.productName.toLowerCase().indexOf(filterBy) !== -1
     );
+  }
+
+  onRatingClicked(message: string): void {
+    this.title = message;
   }
 }

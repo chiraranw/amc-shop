@@ -1,7 +1,5 @@
 <div class="card">
-  <div class="card-header">
-    {{ title }}
-  </div>
+  <div class="card-header">Product List {{ title }}</div>
   <div class="card-body">
     <div class="row">
       <div class="col-md-2">Filtered By:</div>
@@ -48,7 +46,12 @@
             </td>
             <td>{{ product.releaseDate }}</td>
             <td>{{ product.price | currency: "USD":"symbol":"1.2-2" }}</td>
-            <td>{{ product.starRating }}</td>
+            <td>
+              <amc-star
+                [rating]="product.productRating"
+                (ratingClicked)="onRatingClicked($event)"
+              ></amc-star>
+            </td>
           </tr>
         </tbody>
       </table>
