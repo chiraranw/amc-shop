@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IProduct } from '../dtos/product';
-import { ProductService } from 'src/app/shared/services/product.service';
+import { ProductService } from '../services/product.service';
 
 @Component({
   selector: 'amc-product-list',

@@ -10,30 +10,19 @@ import { StarComponent } from './shared/star/star.component';
 import { WelcomeComponent } from './home/welcome/welcome.component';
 import { ProductDetailsComponent } from './products/product-details/product-details.component';
 import { ProductDetailsGuard } from './products/product-details.guard';
+import { ProductModule } from './products/product.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ProductListComponent,
-    ConvertToSpacesPipe,
-    StarComponent,
-    WelcomeComponent,
-    ProductDetailsComponent,
-  ],
+  declarations: [AppComponent, WelcomeComponent],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     RouterModule.forRoot([
-      { path: 'products', component: ProductListComponent },
-      {
-        path: 'products/:id',
-        component: ProductDetailsComponent,
-        canActivate: [ProductDetailsGuard],
-      },
       { path: 'welcome', component: WelcomeComponent },
       { path: '', redirectTo: 'welcome', pathMatch: 'full' },
     ]),
+    ProductModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
