@@ -41,7 +41,7 @@
               />
             </td>
             <td>
-              <a [routerLink]="['/products', product.productId]">
+              <a [routerLink]="['/products', product.id]">
                 {{ product.productName }}
               </a>
             </td>
@@ -52,9 +52,17 @@
             <td>{{ product.price | currency: "USD":"symbol":"1.2-2" }}</td>
             <td>
               <amc-star
-                [rating]="product.productRating"
+                [rating]="product.starRating"
                 (ratingClicked)="onRatingClicked($event)"
               ></amc-star>
+            </td>
+            <td>
+              <button
+                class="btn btn-outline-primary btn-sm"
+                [routerLink]="['/products', product.id, 'edit']"
+              >
+                Edit
+              </button>
             </td>
           </tr>
         </tbody>

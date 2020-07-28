@@ -22,6 +22,7 @@ export class ProductDetailsGuard implements CanActivate {
     | boolean
     | UrlTree {
     let id = +next.url[1].path;
+
     if (isNaN(id) || id < 1) {
       alert('Invalid product id');
       this.router.navigate(['/products']);
