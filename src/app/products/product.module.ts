@@ -14,6 +14,8 @@ import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { ProductData } from './data/product-data';
 import { ResolvedProduct } from './dtos/product';
 import { ProductResolverService } from './services/product-resolver.service';
+import { ProductEditInforComponent } from './product-edit-infor/product-edit-infor.component';
+import { ProductEditTagsComponent } from './product-edit-tags/product-edit-tags.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { ProductResolverService } from './services/product-resolver.service';
     ProductDetailsComponent,
     ConvertToSpacesPipe,
     ProductEditComponent,
+    ProductEditInforComponent,
+    ProductEditTagsComponent,
   ],
   imports: [
     CommonModule,
@@ -32,13 +36,16 @@ import { ProductResolverService } from './services/product-resolver.service';
         path: 'products/:id',
         component: ProductDetailsComponent,
         resolve: { resolvedData: ProductResolverService },
-        canActivate: [ProductDetailsGuard],
       },
       {
         path: 'products/:id/edit',
         resolve: { resolvedData: ProductResolverService },
         component: ProductEditComponent,
-        canDeactivate: [SaveEditsGuard],
+        children: [
+          { path: '', redirectTo: 'infor', pathMatch: 'full' },
+          { path: 'infor', component: ProductEditInforComponent },
+          { path: 'tags', component: ProductEditTagsComponent },
+        ],
       },
     ]),
     SharedModule,

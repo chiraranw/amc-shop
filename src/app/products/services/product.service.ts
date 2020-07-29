@@ -95,6 +95,7 @@ export class ProductService {
       description: null,
       starRating: null,
       imageUrl: null,
+      category: null,
     };
   }
 }
