@@ -31,20 +31,25 @@ import { ProductEditTagsComponent } from './product-edit-tags/product-edit-tags.
     ReactiveFormsModule,
     InMemoryWebApiModule.forRoot(ProductData),
     RouterModule.forChild([
-      { path: 'products', component: ProductListComponent },
       {
-        path: 'products/:id',
-        component: ProductDetailsComponent,
-        resolve: { resolvedData: ProductResolverService },
-      },
-      {
-        path: 'products/:id/edit',
-        resolve: { resolvedData: ProductResolverService },
-        component: ProductEditComponent,
+        path: 'products',
         children: [
-          { path: '', redirectTo: 'infor', pathMatch: 'full' },
-          { path: 'infor', component: ProductEditInforComponent },
-          { path: 'tags', component: ProductEditTagsComponent },
+          { path: '', component: ProductListComponent },
+          {
+            path: ':id',
+            component: ProductDetailsComponent,
+            resolve: { resolvedData: ProductResolverService },
+          },
+          {
+            path: ':id/edit',
+            resolve: { resolvedData: ProductResolverService },
+            component: ProductEditComponent,
+            children: [
+              { path: '', redirectTo: 'infor', pathMatch: 'full' },
+              { path: 'infor', component: ProductEditInforComponent },
+              { path: 'tags', component: ProductEditTagsComponent },
+            ],
+          },
         ],
       },
     ]),
