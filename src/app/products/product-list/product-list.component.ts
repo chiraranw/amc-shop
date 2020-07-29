@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IProduct } from '../dtos/product';
 import { ProductService } from '../services/product.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'amc-product-list',
@@ -12,7 +13,7 @@ export class ProductListComponent implements OnInit {
   public imageWidth: number = 50;
   public imageMargin: number = 2;
   public showImage: boolean = false;
-  private _productFilter: string;
+  private _productFilter: string = '';
   error: any;
   public get productFilter(): string {
     return this._productFilter;
@@ -27,9 +28,17 @@ export class ProductListComponent implements OnInit {
   public filteredProducts: IProduct[];
   public products: IProduct[] = [];
 
-  constructor(private productSvc: ProductService) {}
+  constructor(
+    private productSvc: ProductService,
+    private activatedRt: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+    this.productFilter =
+      this.activatedRt.snapshot.queryParamMap.get('productFilter') || '';
+    this.showImage =
+      this.activatedRt.snapshot.queryParamMap.get('showImage') === 'true';
+
     this.productSvc.getProducts().subscribe({
       next: (products) => {
         this.products = products;
