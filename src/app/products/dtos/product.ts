@@ -9,3 +9,7 @@ export interface IProduct {
   starRating: number;
   imageUrl: string;
 }
+export interface ResolvedProduct {
+  product: IProduct;
+  error?: any;
+}

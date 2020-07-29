@@ -17,7 +17,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, merge, fromEvent, Observable } from 'rxjs';
 import { ProductService } from '../services/product.service';
-import { IProduct } from '../dtos/product';
+import { IProduct, ResolvedProduct } from '../dtos/product';
 import { NumberValidator } from 'src/app/shared/number-validator';
 import { GenericValidator } from 'src/app/shared/generic-validator';
 import { debounceTime } from 'rxjs/operators';
@@ -27,15 +27,13 @@ import { debounceTime } from 'rxjs/operators';
   templateUrl: './product-edit.component.html',
   styleUrls: ['./product-edit.component.css'],
 })
-export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProductEditComponent implements OnInit {
   @ViewChildren(FormControlName, { read: ElementRef })
   formInputElements: ElementRef[];
   public productForm: FormGroup;
   public pageTitle: string = 'Edit Product';
   public errorMessage: string;
   product: IProduct;
-
-  private sub: Subscription;
 
   // Use with the generic validation message class
   displayMessage: { [key: string]: string } = {};
@@ -71,9 +69,6 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
     // passing in this form's set of validation messages.
     this.genericValidator = new GenericValidator(this.validationMessages);
   }
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
-  }
 
   ngOnInit(): void {
     this.productForm = this.formBuilder.group({
@@ -91,30 +86,22 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
       description: [],
     });
 
-    this.sub = this.activatedRoute.paramMap.subscribe((params) => {
-      const id = +params.get('id');
-      this.getProduct(id);
+    //Loading Data
+    this.activatedRoute.data.subscribe((data) => {
+      const resolvedData: ResolvedProduct = data['resolvedData'];
+      this.errorMessage = resolvedData.error;
+      this.onProductRetrieved(resolvedData.product);
     });
   }
 
-  ngAfterViewInit(): void {
-    // Watch for the blur event from any input element on the form.
-    // This is required because the valueChanges does not provide notification on blur
-    const controlBlurs: Observable<
-      any
-    >[] = this.formInputElements.map((formControl: ElementRef) =>
-      fromEvent(formControl.nativeElement, 'blur')
-    );
+  onProductRetrieved(product: IProduct): void {
+    this.product = product;
 
-    // Merge the blur event observable with the valueChanges observable
-    // so we only need to subscribe once.
-    merge(this.productForm.valueChanges, ...controlBlurs)
-      .pipe(debounceTime(800))
-      .subscribe((value) => {
-        this.displayMessage = this.genericValidator.processMessages(
-          this.productForm
-        );
-      });
+    if (this.product) {
+      this.pageTitle = `Product Detail: ${this.product.productName}`;
+    } else {
+      this.pageTitle = 'No product found';
+    }
   }
 
   addTag(): void {
@@ -124,39 +111,6 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
   deleteTag(index: number): void {
     this.tags.removeAt(index);
     this.tags.markAsDirty();
-  }
-
-  getProduct(id: number): void {
-    this.productSvc.getProduct(id).subscribe({
-      next: (product: IProduct) => this.displayProduct(product),
-      error: (err) => (this.errorMessage = err),
-    });
-  }
-
-  displayProduct(product: IProduct): void {
-    if (this.productForm) {
-      this.productForm.reset();
-    }
-    this.product = product;
-
-    if (this.product.id === 0) {
-      this.pageTitle = 'Add Product';
-      console.log('Product id', this.product.id);
-    } else {
-      this.pageTitle = `Edit Product: ${this.product.productName}`;
-    }
-
-    // Update the data on the form
-    this.productForm.patchValue({
-      productName: this.product.productName,
-      productCode: this.product.productCode,
-      starRating: this.product.starRating,
-      description: this.product.description,
-    });
-    this.productForm.setControl(
-      'tags',
-      this.formBuilder.array(this.product.tags || [])
-    );
   }
 
   deleteProduct(): void {

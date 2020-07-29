@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IProduct } from '../dtos/product';
+import { IProduct, ResolvedProduct } from '../dtos/product';
 import { ProductService } from '../services/product.service';
 @Component({
   selector: 'amc-product-details',
@@ -18,19 +18,23 @@ export class ProductDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const param = this.route.snapshot.paramMap.get('id');
-    if (param) {
-      const id = +param;
-      this.getProduct(id);
+    const resolvedData: ResolvedProduct = this.route.snapshot.data[
+      'resolvedData'
+    ];
+    this.errorMessage = resolvedData.error;
+    this.onProductRetrieved(resolvedData.product);
+  }
+
+  onProductRetrieved(product: IProduct): void {
+    this.product = product;
+
+    if (this.product) {
+      this.pageTitle = `Product Detail: ${this.product.productName}`;
+    } else {
+      this.pageTitle = 'No product found';
     }
   }
 
-  getProduct(id: number) {
-    this.productService.getProduct(id).subscribe({
-      next: (product) => (this.product = product),
-      error: (err) => (this.errorMessage = err),
-    });
-  }
   onBack(): void {
     this.router.navigate(['/products'], { queryParamsHandling: 'preserve' });
   }

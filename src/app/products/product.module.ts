@@ -12,6 +12,8 @@ import { ProductEditComponent } from './product-edit/product-edit.component';
 import { SaveEditsGuard } from './save-edits.guard';
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { ProductData } from './data/product-data';
+import { ResolvedProduct } from './dtos/product';
+import { ProductResolverService } from './services/product-resolver.service';
 
 @NgModule({
   declarations: [
@@ -29,12 +31,14 @@ import { ProductData } from './data/product-data';
       {
         path: 'products/:id',
         component: ProductDetailsComponent,
+        resolve: { resolvedData: ProductResolverService },
         canActivate: [ProductDetailsGuard],
       },
       {
         path: 'products/:id/edit',
-        canDeactivate: [SaveEditsGuard],
+        resolve: { resolvedData: ProductResolverService },
         component: ProductEditComponent,
+        canDeactivate: [SaveEditsGuard],
       },
     ]),
     SharedModule,
