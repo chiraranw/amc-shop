@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { WelcomeComponent } from './home/welcome/welcome.component';
 import { AuthGuard } from './user/auth.guard';
 
@@ -9,7 +9,7 @@ const ROUTES: Routes = [
   { path: 'welcome', component: WelcomeComponent },
   {
     path: 'products',
-    canLoad: [AuthGuard],
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./products/product.module').then((m) => m.ProductModule),
   },
@@ -18,7 +18,14 @@ const ROUTES: Routes = [
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule, RouterModule.forRoot(ROUTES)],
+  imports: [
+    CommonModule,
+    RouterModule.forRoot(ROUTES, { preloadingStrategy: PreloadAllModules }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
+
+/**
+ * Preloading conflicts with canLoad, it goes with canActivate
+ */
