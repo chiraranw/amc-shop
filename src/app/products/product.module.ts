@@ -44,8 +44,10 @@ import { AuthGuard } from '../user/auth.guard';
           },
           {
             path: ':id/edit',
+            canDeactivate: [SaveEditsGuard],
             resolve: { resolvedData: ProductResolverService },
             component: ProductEditComponent,
+
             children: [
               { path: '', redirectTo: 'infor', pathMatch: 'full' },
               { path: 'infor', component: ProductEditInforComponent },

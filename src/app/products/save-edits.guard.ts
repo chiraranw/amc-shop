@@ -5,6 +5,7 @@ import {
   RouterStateSnapshot,
   UrlTree,
   CanDeactivate,
+  ActivatedRoute,
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ProductEditComponent } from './product-edit/product-edit.component';
@@ -14,8 +15,15 @@ import { ProductEditComponent } from './product-edit/product-edit.component';
 })
 export class SaveEditsGuard implements CanDeactivate<ProductEditComponent> {
   canDeactivate(
-    component: ProductEditComponent
-  ): Observable<boolean> | Promise<boolean> | boolean {
+    component: ProductEditComponent,
+    currentRoute: ActivatedRouteSnapshot,
+    currentSate: RouterStateSnapshot,
+    nextState?: RouterStateSnapshot
+  ): boolean {
+    if (component.isDirty) {
+      const prodName = component.product.productName || 'New Product';
+      return confirm(`Are you sure you don't want to save ${prodName}`);
+    }
     return true;
   }
 }

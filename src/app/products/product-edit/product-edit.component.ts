@@ -12,7 +12,28 @@ import { IProduct, ResolvedProduct } from '../dtos/product';
 export class ProductEditComponent implements OnInit {
   public pageTitle: string = 'Edit Product';
   public errorMessage: string;
-  product: IProduct;
+  //_product: IProduct;
+
+  /**
+   * Helpers for the CanDeactivate Guard
+   */
+  private currentProduct: IProduct;
+  private oldProduct: IProduct;
+  get product(): IProduct {
+    return this.currentProduct;
+  }
+
+  set product(value: IProduct) {
+    this.currentProduct = value;
+    this.oldProduct = { ...value };
+  }
+
+  public get isDirty() {
+    return (
+      JSON.stringify(this.oldProduct) !== JSON.stringify(this.currentProduct)
+    );
+  }
+  //End Helpers
 
   private dataIsValid: { [key: string]: boolean } = {};
 
@@ -31,8 +52,14 @@ export class ProductEditComponent implements OnInit {
     });
   }
 
-  onProductRetrieved(product: IProduct): void {
-    this.product = product;
+  reset(): void {
+    this.dataIsValid = null;
+    this.currentProduct = null;
+    this.oldProduct = null;
+  }
+
+  onProductRetrieved(prdct: IProduct): void {
+    this.product = prdct;
 
     if (this.product) {
       this.pageTitle = `Product Detail: ${this.product.productName}`;
@@ -84,7 +111,7 @@ export class ProductEditComponent implements OnInit {
     if (message) {
       //this.messageService.addMessage(message);
     }
-
+    this.reset();
     // Navigate back to the product list
     this.router.navigate(['/products']);
   }
