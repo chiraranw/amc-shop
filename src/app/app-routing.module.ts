@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { WelcomeComponent } from './home/welcome/welcome.component';
 import { AuthGuard } from './user/auth.guard';
+import { SelectiveLoadingService } from './products/services/selective-loading.service';
 
 const newLocal = 'products';
 const ROUTES: Routes = [
   { path: 'welcome', component: WelcomeComponent },
   {
     path: 'products',
+    data: { preload: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./products/product.module').then((m) => m.ProductModule),
@@ -20,7 +22,9 @@ const ROUTES: Routes = [
   declarations: [],
   imports: [
     CommonModule,
-    RouterModule.forRoot(ROUTES, { preloadingStrategy: PreloadAllModules }),
+    RouterModule.forRoot(ROUTES, {
+      preloadingStrategy: SelectiveLoadingService,
+    }),
   ],
   exports: [RouterModule],
 })
