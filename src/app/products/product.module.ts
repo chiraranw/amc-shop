@@ -16,6 +16,7 @@ import { ResolvedProduct } from './dtos/product';
 import { ProductResolverService } from './services/product-resolver.service';
 import { ProductEditInforComponent } from './product-edit-infor/product-edit-infor.component';
 import { ProductEditTagsComponent } from './product-edit-tags/product-edit-tags.component';
+import { AuthGuard } from '../user/auth.guard';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { ProductEditTagsComponent } from './product-edit-tags/product-edit-tags.
     RouterModule.forChild([
       {
         path: 'products',
+        canActivate: [AuthGuard],
         children: [
           { path: '', component: ProductListComponent },
           {
