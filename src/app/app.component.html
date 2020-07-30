@@ -7,7 +7,27 @@
       >
     </li>
     <li>
-      <a class="nav-link" routerLinkActive="active" [routerLink]="['/products']"
+      <!--
+        Only
+        Add
+        option
+        here
+        becase
+        its
+        the
+        only
+        one
+        that
+        could
+        match
+        multiple
+        routes
+      -->
+      <a
+        class="nav-link"
+        routerLinkActive="active"
+        [routerLink]="['/products']"
+        [routerLinkActiveOptions]="{ exact: true }"
         >Product List</a
       >
     </li>

@@ -5,8 +5,15 @@
 
   <div class="card-body" *ngIf="product">
     <div class="wizard">
-      <a [routerLink]="['infor']">Basic Infor</a>
-      <a [routerLink]="['tags']">Search Tags</a>
+      <a [routerLink]="['infor']" routerLinkActive="active"
+        >Basic Infor
+        <span [ngClass]="{ 'fa fa-exclamation': !isValid('infor') }"></span>
+      </a>
+      <a [routerLink]="['tags']" routerLinkActive="active"
+        >Search Tags<span
+          [ngClass]="{ 'fa fa-exclamation': !isValid('tags') }"
+        ></span
+      ></a>
       <router-outlet></router-outlet>
       <div class="form-group row mb-2">
         <div class="col-md-4">
