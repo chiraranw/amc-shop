@@ -8,6 +8,7 @@ import {
   NavigationCancel,
   NavigationError,
 } from '@angular/router';
+import { MessageService } from './messages/message.service';
 
 @Component({
   selector: 'amc-root',
@@ -18,10 +19,24 @@ export class AppComponent {
   pageTitle = 'Acme Product Management';
   public loading: boolean;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private msgSvc: MessageService
+  ) {
     this.router.events.subscribe((routerEvent: Event) => {
       this.checkoutRouterEvents(routerEvent);
     });
+  }
+
+  displayMessages(): void {
+    this.router.navigate([{ outlets: { popup: ['messages'] } }]);
+    this.msgSvc.isDisplayed = true;
+  }
+
+  hideMessages(): void {
+    this.msgSvc.isDisplayed = false;
+    this.router.navigate([{ outlets: { popup: null } }]);
   }
 
   private checkoutRouterEvents(routerEvent): void {
@@ -42,6 +57,9 @@ export class AppComponent {
     return this.authService.isLoggedIn;
   }
 
+  get isMessageDisplayed() {
+    return this.msgSvc.isDisplayed;
+  }
   get userName(): string {
     if (this.authService.currentUser) {
       return this.authService.currentUser.userName;
