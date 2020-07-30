@@ -23,13 +23,14 @@ export class AuthGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    return this.isLoggedIn();
+    return this.isLoggedIn(state.url);
   }
 
-  private isLoggedIn(): boolean {
+  private isLoggedIn(url: string): boolean {
     if (this.authSvc.currentUser) {
       return true;
     }
+    this.authSvc.redirectUrl = url;
     this.router.navigate(['/login']);
     return false;
   }
